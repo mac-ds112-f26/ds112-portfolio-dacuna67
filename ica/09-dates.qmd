@@ -26,9 +26,12 @@ To comment/uncomment several lines of code at once, highlight them then click <k
 ```{r}
 # Create a dataset with just Adelie and Chinstrap using %in%
 # Pipe this into `count(species)` to confirm that you only have these 2 species
-# ___ |>
-#   filter(___) |>
-#   count(species)
+library(tidyverse)
+penguins <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv')
+
+penguins |>
+   filter(species %in% c("Adelie", "Chinstrap")) |>
+   count(species)
 ```
 
 ### ✏️ Filter with `!=`
@@ -36,9 +39,9 @@ To comment/uncomment several lines of code at once, highlight them then click <k
 ```{r}
 # Create a dataset with just Adelie and Chinstrap using !=
 # Pipe this into `count(species)` to confirm that you only have these 2 species
-# ___ |>
-#   filter(___) |>
-#   count(species)
+penguins|>
+   filter(species != "Gentoo") |>
+   count(species)
 ```
 
 ### ✏️ Explore Missing Data
@@ -101,7 +104,7 @@ nrow(penguins)
 ### ✏️ Explain `na.omit()` Risk
 
 Explain why we should only use `na.omit()` in extreme circumstances.
-
+> This could get rid of data points even if they contain information within variables we need, only because they may not have information on variables that are actually needed.
 \
 \
 \
@@ -124,7 +127,8 @@ names(penguins)
 Use a shortcut to keep everything but the year and island variables.
 
 ```{r}
-
+penguins |>
+  select(-year, -island)
 ```
 
 
@@ -133,7 +137,8 @@ Use a shortcut to keep everything but the year and island variables.
 Use a shortcut to keep only species and the penguin characteristics measured in mm.
 
 ```{r}
-
+penguins |>
+  select(species, ends_with("mm"))
 ```
 
 
@@ -142,7 +147,8 @@ Use a shortcut to keep only species and the penguin characteristics measured in 
 Use a shortcut to keep only species and bill-related measurements.
 
 ```{r}
-
+penguins |>
+  select(species, starts_with("bill"))
 ```
 
 
@@ -151,7 +157,8 @@ Use a shortcut to keep only species and bill-related measurements.
 Use a shortcut to keep only species and the length-related characteristics.
 
 ```{r}
-
+penguins |>
+  select(species, contains("lenght"))
 ```
 
 \
@@ -167,7 +174,7 @@ We've done examples where we need to `filter()` by more than one variable, or `s
 # Change this code to sort the penguins by species, and then island name
 # NOTE: The first row should be an Adelie penguin living on Biscoe island
 penguins |>
-  arrange(species) |> 
+  arrange(species, island) |> 
   head()
 ```
 
@@ -176,7 +183,7 @@ penguins |>
 ```{r}
 # Change this code to count the number of male/female penguins observed for each species
 penguins |>
-  count(species)
+  count(species, sex)
 ```
 
 ### ✏️ Group by 2 Variables
@@ -184,7 +191,7 @@ penguins |>
 ```{r}
 # Change this code to calculate the average body mass by species and sex
 penguins |>
-  group_by(species) |>
+  group_by(species,sex) |>
   summarize(mean = mean(body_mass_g, na.rm = TRUE))
 
 ```
@@ -217,29 +224,34 @@ year(today)
 
 ```{r}
 # What do these lines produce / what's their difference?
+# The order of the montsh in order and which one we are under
 month(today)
 month(today, label = TRUE)
 ```
 
 ```{r}
 # What does this number mean?
+# The week of the year we are on
 week(today)
 ```
 
 ```{r}
 # What do these lines produce / what's their difference?
+# 
 mday(today)
 yday(today)  # This is often called the "Julian day"
 ```
 
 ```{r}
 # What do these lines produce / what's their difference?
+# Tells us the order of the days of the week and what day we are on
 wday(today)
 wday(today, label = TRUE)
 ```
 
 ```{r}
 # What do the results of these 2 lines tell us?
+# Tells use wether todays date is true
 today >= ymd("2024-02-14")
 today < ymd("2024-02-14")
 ```
